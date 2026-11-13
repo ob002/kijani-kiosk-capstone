@@ -17,6 +17,9 @@ for i in $(seq 1 10); do
   BODY=$(curl -fsS "http://127.0.0.1:$PORT/health" || true)
   if echo "$BODY" | grep -q "\"env\":\"$EXPECTED\""; then
     echo "[smoke] $BODY"
+    CODE=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://127.0.0.1:$PORT/payments" -H 'Content-Type: application/json' -d '{"amount":1,"customerId":"smoke"}')
+    if [ "$CODE" != "201" ]; then echo "[smoke] FAIL: POST /payments returned $CODE"; exit 1; fi
+    echo "[smoke] payments OK (201)"
     echo "[smoke] PASS in $NS"
     exit 0
   fi
