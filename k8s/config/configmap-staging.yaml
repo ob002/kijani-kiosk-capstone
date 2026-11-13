@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kk-payments-config
+data:
+  APP_ENV: "staging"
+  DB_HOST: "kk-db.kijani-staging.svc.cluster.local"
+  RECEIPTS_BUCKET: "kk-payments-receipts-staging"

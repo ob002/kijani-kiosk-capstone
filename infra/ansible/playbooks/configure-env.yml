@@ -1,0 +1,19 @@
+---
+- name: Configure KijaniKiosk environments
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    repo_root: "{{ playbook_dir }}/../../.."
+  tasks:
+    - name: Apply staging ConfigMap into kijani-staging
+      kubernetes.core.k8s:
+        state: present
+        namespace: kijani-staging
+        src: "{{ repo_root }}/k8s/config/configmap-staging.yaml"
+
+    - name: Apply production ConfigMap into default
+      kubernetes.core.k8s:
+        state: present
+        namespace: default
+        src: "{{ repo_root }}/k8s/config/configmap-production.yaml"
