@@ -1,0 +1,30 @@
+digraph G {
+  rankdir=LR; node [shape=box, style="rounded,filled", fillcolor="#ffffff", fontname="Helvetica", fontsize=11];
+  edge [fontname="Helvetica", fontsize=9];
+  label="KijaniKiosk Capstone - Track A (as built)"; labelloc=t; fontsize=16; fontname="Helvetica";
+
+  dev  [label="Engineer\nfeature branch -> PR", fillcolor="#eef3ff"];
+  gh   [label="GitHub\nob002/kijani-kiosk-capstone\nbranch: main", fillcolor="#eef3ff"];
+  jen  [label="Jenkins (localhost:8080)\nBuild -> Deploy staging -> Smoke test\n-> Approval (reason) -> Deploy prod", fillcolor="#fff4e6"];
+  tf   [label="Terraform\nnamespace kijani-staging\n+ ResourceQuota", fillcolor="#e9f7ef"];
+  ans  [label="Ansible\nConfigMap kk-payments-config\n(per environment)", fillcolor="#e9f7ef"];
+
+  subgraph cluster_mk { label="minikube cluster"; color="#2e7d32"; fontname="Helvetica";
+    img  [label="Image store\nkk-payments:<git-sha>", fillcolor="#fff4e6"];
+    stg  [label="ns: kijani-staging\nkk-payments x2\nDB_HOST=kk-db.kijani-staging", fillcolor="#e3f2fd"];
+    prod [label="ns: default (production)\nkk-payments x2\nDB_HOST=kk-db.default", fillcolor="#ffebee"];
+    prom [label="ns: monitoring\nPrometheus + kube-state-metrics\nalert: KkPaymentsPodRestarting", fillcolor="#f3e5f5"];
+  }
+
+  dev -> gh   [label="push branch / merge PR"];
+  gh  -> jen  [label="pollSCM (every 2 min) detects merge"];
+  jen -> img  [label="minikube image build"];
+  jen -> stg  [label="kubectl apply deployment.yaml\n+ smoke test /health, POST /payments"];
+  jen -> prod [label="same deployment.yaml\nonly after smoke PASS + approval"];
+  img -> stg  [label="image"]; img -> prod [label="image"];
+  tf  -> stg  [label="creates namespace + quota"];
+  ans -> stg  [label="staging ConfigMap"];
+  ans -> prod [label="production ConfigMap"];
+  stg -> prom [label="pod restart metrics"];
+  prod -> prom [label="pod restart metrics"];
+}
