@@ -32,3 +32,13 @@ All AI-generated files are listed below. Every entry was verified by running it.
 6. **Change I made:** Waited the full window before undoing; re-applied the manifest instead of using `rollout undo`.
 7. **Governance checklist item:** Monitoring is verified against a real failure, not assumed.
 8. **Follow-up:** Add an Alertmanager receiver.
+
+## Entry 4 — kk-payments service, Kubernetes manifests, Terraform, Ansible
+1. **Date / tool:** 2026-11-13/14, Claude
+2. **Task:** No Week 9 service or image existed, so a minimal kk-payments service and its infrastructure were needed
+3. **What AI produced:** `app/kk-payments/server.js`, `app/kk-payments/Dockerfile`, `k8s/deployment.yaml`, `k8s/service.yaml`, `k8s/config/*.yaml`, `infra/terraform/main.tf`, `infra/ansible/playbooks/configure-env.yml`
+4. **What it got wrong:** The first instructions assumed the repo was already cloned at `~/kijani-kiosk-capstone` and that a Week 9 image existed. Files were created in the home folder, git commands failed, and the pods had no image to run.
+5. **How I verified:** `terraform apply` created `kijani-staging`; the Ansible playbook applied two different DB_HOST values (checked with kubectl); `curl /health` returned `env=staging`; the pipeline smoke tests passed in both namespaces.
+6. **Change I made:** Cloned the repo, moved the files into it, and built the image with `minikube image build`. `server.js` is a stand-in for the course's kk-payments code: it has no database or S3 writes.
+7. **Governance checklist item:** All AI-generated code is disclosed and tested before use.
+8. **Follow-up:** Replace `server.js` with the course kk-payments code and add S3 receipt writes for the Week 10 chain.
