@@ -88,3 +88,10 @@ Then in Jenkins: New Item → Pipeline → *Pipeline script from SCM* → Git �
 **Production gaps (not done):** staging and production share one cluster; there's no NetworkPolicy; Alertmanager has no receiver (alerts aren't sent anywhere); there's no real database (`DB_HOST` is configuration only); the receipt chain to S3 is not integrated.
 
 AI tool usage is documented in [`docs/ai-governance-log.md`](docs/ai-governance-log.md).
+
+## Note on the kk-payments service
+`app/kk-payments/server.js` is a minimal stand-in service written with AI assistance (see Entry 4 in `docs/ai-governance-log.md`), because no Week 9 build was available. It serves `GET /health` and `POST /payments` and logs in JSON. It has no database and does not write receipts to S3.
+
+## Evidence
+- Pipeline screenshots: `docs/evidence/` and `docs/pipeline-evidence.pdf`
+- Slides: `docs/slides.pdf` · Scope: `docs/scope.pdf`
