@@ -2,3 +2,6 @@ node_modules/
 .terraform/
 *.tfstate
 *.tfstate.*
+
+.serena/
+app/kk-payments/server.js
